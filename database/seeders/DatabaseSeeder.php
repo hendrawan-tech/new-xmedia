@@ -65,7 +65,7 @@ class DatabaseSeeder extends Seeder
         Installation::create([
             'status' => 'Aktif',
             'date_install' => now()->format('Y-m-d H:i:s'),
-            'first_payment' => '2',
+            'first_payment' => '1',
             'end_date' => $tanggal20BulanDepan->format('Y-m-d H:i:s'),
             'user_id' => 3,
         ]);
