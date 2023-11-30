@@ -57,13 +57,19 @@ class UserController extends Controller
             'user_meta_id' => $meta->id,
         ]);
         $tanggalSekarang = Carbon::now();
-        $tanggalPertamaBulanDepan = $tanggalSekarang->addMonthsNoOverflow()->startOfMonth();
-        $tanggal20BulanDepan = $tanggalPertamaBulanDepan->addDays(19);
+        $tanggalPertamaBulanDepan = $tanggalSekarang->copy()->addMonthsNoOverflow()->startOfMonth();
+        $tanggal20BulanDepan = $tanggalPertamaBulanDepan->copy()->addDays(19);
+        $tanggal20BulanIni = $tanggalSekarang->copy()->addDays(19);
+
+        $end_date = $tanggalSekarang->greaterThanOrEqualTo($tanggalSekarang->copy()->startOfMonth()->addDays(19)) ?
+            $tanggal20BulanDepan->format('Y-m-d H:i:s') :
+            $tanggal20BulanIni->format('Y-m-d H:i:s');
+
         Installation::create([
             'status' => 'Aktif',
             'date_install' => now()->format('Y-m-d H:i:s'),
             'first_payment' => $request->first_payment,
-            'end_date' => $tanggal20BulanDepan->format('Y-m-d H:i:s'),
+            'end_date' => $end_date,
             'user_id' => $user->id,
         ]);
         return ResponseFormatter::success();

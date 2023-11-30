@@ -331,6 +331,7 @@ class InvoiceController extends Controller
         $data = Installation::with('user')->get();
 
         $tanggalSekarang = Carbon::now();
+        $tanggal20BulanIni = $tanggalSekarang->copy()->addDays(19);
         $tanggalPertamaBulanDepan = $tanggalSekarang->addMonthsNoOverflow()->startOfMonth();
         $tanggal20BulanDepan = $tanggalPertamaBulanDepan->addDays(19);
 
@@ -343,9 +344,13 @@ class InvoiceController extends Controller
                 $package = Package::where('id', $userMeta['package_id'])->first();
 
                 $tanggalAwal = Carbon::parse($item['date_install']);
-                $jarakHari = $tanggalAwal->diffInDays($tanggal20BulanDepan);
+                $jarakHari = 0;
+                if ($tanggalAwal->greaterThanOrEqualTo(Carbon::now()->startOfMonth()->addDays(19))) {
+                    $jarakHari = $tanggalAwal->diffInDays($tanggal20BulanDepan);
+                } else {
+                    $jarakHari = $tanggalAwal->diffInDays($tanggal20BulanIni);
+                }
                 $potonganHarga = 3000 * $jarakHari;
-
                 $data_request = Http::withHeaders([
                     'Authorization' => $secret_key
                 ])->post('https://api.xendit.co/v2/invoices', [
@@ -397,7 +402,7 @@ class InvoiceController extends Controller
 
                 Invoice::create([
                     'external_id' => $external_id,
-                    'price' => (int)$package->price,
+                    'price' => (int)$package->price - $potonganHarga,
                     'status' => $response->status,
                     'invoice_url' =>  $response->invoice_url,
                     'user_id' => $item['user']['id'],
