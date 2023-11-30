@@ -296,7 +296,6 @@ class InvoiceController extends Controller
         $payload = $request->all();
         if ($payload['status'] === 'PAID') {
             $invoice = Invoice::where('external_id', $payload['external_id'])->first();
-            return $invoice;
             if ($invoice) {
                 $invoice->update([
                     'status' => "SUCCESS",
