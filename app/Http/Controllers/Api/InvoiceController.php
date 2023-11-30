@@ -301,7 +301,7 @@ class InvoiceController extends Controller
                     'status' => "SUCCESS",
                 ]);
 
-                $installation = Installation::where('user_id', $invoice->user_id)->first();
+                return $installation = Installation::where('user_id', $invoice->user_id)->first();
                 if ($installation) {
                     $tanggalSekarang = Carbon::now();
                     $tanggalPertamaBulanDepan = $tanggalSekarang->addMonthsNoOverflow()->startOfMonth();
