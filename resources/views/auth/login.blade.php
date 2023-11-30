@@ -101,6 +101,9 @@
                             <div class="text-white"><b>Email : </b>user@xmedia.net</div>
                             <div class="text-white"><b>Password : </b>password</div>
                             <hr class="bg-white">
+                            <div class="text-white"><b>Email : </b>user2@xmedia.net</div>
+                            <div class="text-white"><b>Password : </b>password</div>
+                            <hr class="bg-white">
                             <div class="text-white small"><b>Notice : </b>Data dari database akan di kembalikan seperti
                                 semula setiap 24 Jam untuk keperluan Testing</div>
                         </div>
