@@ -296,19 +296,30 @@ class InvoiceController extends Controller
         $payload = $request->all();
         if ($payload['status'] === 'PAID') {
             $invoice = Invoice::where('external_id', $payload['external_id'])->first();
-            $invoice->update([
-                'status' => "SUCCESS",
-            ]);
-            $installation = Installation::where('user_id', $invoice->user_id)->first();
-            $tanggalSekarang = Carbon::now();
-            $tanggalPertamaBulanDepan = $tanggalSekarang->addMonthsNoOverflow()->startOfMonth();
-            $tanggal20BulanDepan = $tanggalPertamaBulanDepan->addDays(19);
-            $installation->update([
-                'end_date' => $tanggal20BulanDepan,
-            ]);
+            if ($invoice) {
+                $invoice->update([
+                    'status' => "SUCCESS",
+                ]);
+
+                $installation = Installation::where('user_id', $invoice->user_id)->first();
+                if ($installation) {
+                    $tanggalSekarang = Carbon::now();
+                    $tanggalPertamaBulanDepan = $tanggalSekarang->addMonthsNoOverflow()->startOfMonth();
+                    $tanggal20BulanDepan = $tanggalPertamaBulanDepan->addDays(19);
+
+                    $installation->update([
+                        'end_date' => $tanggal20BulanDepan,
+                    ]);
+                } else {
+                    return ResponseFormatter::error();
+                }
+            } else {
+                return ResponseFormatter::error();
+            }
         }
         return ResponseFormatter::success();
     }
+
 
     public function resetData(Request $request)
     {
