@@ -59,6 +59,29 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
             'user_meta_id' => 1,
         ]);
+        UserMeta::create([
+            'phone' => '085213873678',
+            'address' => 'Bondowoso',
+            'rt' => '2',
+            'rw' => '1',
+            'longlat' => '-',
+            'province_id' => 35,
+            'province_name' => 'Jawa Timur',
+            'regencies_id' => 3511,
+            'regencies_name' => 'Bondowoso',
+            'district_id' => '351111',
+            'district_name' => 'Nangkaan',
+            'ward_id' => '3511111007',
+            'ward_name' => 'Dabasah',
+            'package_id' => 1,
+            'xmedia_id' => 'xmedia 2',
+        ]);
+        User::create([
+            'name' => 'User Dua',
+            'email' => 'user2@xmedia.net',
+            'password' => Hash::make('password'),
+            'user_meta_id' => 2,
+        ]);
 
         $tanggalSekarang = Carbon::now();
         $tanggalPertamaBulanDepan = $tanggalSekarang->copy()->addMonthsNoOverflow()->startOfMonth();
@@ -72,9 +95,16 @@ class DatabaseSeeder extends Seeder
         Installation::create([
             'status' => 'Aktif',
             'date_install' => now()->format('Y-m-d H:i:s'),
-            'first_payment' => '1',
+            'first_payment' => '2',
             'end_date' => $end_date,
             'user_id' => 3,
+        ]);
+        Installation::create([
+            'status' => 'Aktif',
+            'date_install' => now()->format('Y-m-d H:i:s'),
+            'first_payment' => '1',
+            'end_date' => $end_date,
+            'user_id' => 4,
         ]);
     }
 }
