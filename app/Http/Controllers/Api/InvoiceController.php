@@ -296,12 +296,13 @@ class InvoiceController extends Controller
         $payload = $request->all();
         if ($payload['status'] === 'PAID') {
             $invoice = Invoice::where('external_id', $payload['external_id'])->first();
+            return $invoice;
             if ($invoice) {
                 $invoice->update([
                     'status' => "SUCCESS",
                 ]);
 
-                return $installation = Installation::where('user_id', $invoice->user_id)->first();
+                $installation = Installation::where('user_id', $invoice->user_id)->first();
                 if ($installation) {
                     $tanggalSekarang = Carbon::now();
                     $tanggalPertamaBulanDepan = $tanggalSekarang->addMonthsNoOverflow()->startOfMonth();
