@@ -47,15 +47,15 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/article', [AppController::class, 'article']);
     Route::get('/about', [AppController::class, 'about']);
 
-    // Data
-    Route::get('/district', [DataController::class, 'district']);
-    Route::get('/ward', [DataController::class, 'ward']);
-    Route::get('/package', [DataController::class, 'package']);
-
     Route::get('/promo', [AppController::class, 'promo']);
     Route::get('/about', [AppController::class, 'about']);
     Route::get('/article', [AppController::class, 'article']);
 });
+
+// Data
+Route::get('/district', [DataController::class, 'district']);
+Route::get('/ward', [DataController::class, 'ward']);
+Route::get('/package', [DataController::class, 'package']);
 
 Route::get('/bulk-invoice', [InvoiceController::class, 'bulkCreateInvoice']);
 Route::get('/reset-data', [InvoiceController::class, 'resetData']);

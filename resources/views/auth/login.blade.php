@@ -93,21 +93,6 @@
                             </form>
                         </div>
                     </div>
-
-                    <div class="card mt-4 bg-primary text-white shadow">
-                        <div class="card-body">
-                            Informasi Akun Testing
-                            <hr class="bg-white">
-                            <div class="text-white"><b>Email : </b>user@xmedia.net</div>
-                            <div class="text-white"><b>Password : </b>password</div>
-                            <hr class="bg-white">
-                            <div class="text-white"><b>Email : </b>user2@xmedia.net</div>
-                            <div class="text-white"><b>Password : </b>password</div>
-                            <hr class="bg-white">
-                            <div class="text-white small"><b>Notice : </b>Data dari database akan di kembalikan seperti
-                                semula setiap 24 Jam untuk keperluan Testing</div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

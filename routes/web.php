@@ -1,5 +1,12 @@
 <?php
 
+use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\ClientController;
+use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PackageController;
+use App\Http\Controllers\PromoController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,4 +27,11 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/invoices', [App\Http\Controllers\HomeController::class, 'invoice'])->name('invoice');
+Route::resource('invoices', InvoiceController::class);
+Route::resource('user/clients', ClientController::class);
+Route::resource('user/employees', EmployeeController::class);
+Route::resource('user/clients', ClientController::class);
+Route::resource('packages', PackageController::class);
+Route::resource('content/articles', ArticleController::class);
+Route::resource('content/promos', PromoController::class);
+Route::resource('content/notifications', NotificationController::class);

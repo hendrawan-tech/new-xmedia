@@ -25,12 +25,11 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
-    }
-
-    public function invoice()
-    {
-        $invoices = Invoice::where('user_id', Auth::user()->id)->get();
-        return view('invoice', compact('invoices'));
+        $user = Auth::user();
+        if ($user->role == 'admin') {
+            return view('dashboard.index');
+        } else {
+            return view('dashboard.home');
+        }
     }
 }
