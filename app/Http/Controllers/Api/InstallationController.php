@@ -15,7 +15,7 @@ class InstallationController extends Controller
 {
     function listInstallation(Request $request)
     {
-        $data = Installation::where(['status' => 'Antrian'])->with('user.userMeta.package')->get();
+        $data = Installation::with('user.userMeta.package')->get();
         return ResponseFormatter::success($data);
     }
 

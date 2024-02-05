@@ -20,7 +20,7 @@ class InvoiceController extends Controller
     {
         $user = $request->user();
         if ($user->role == 'user') {
-            $data = Invoice::where(['user_id' => $user->id])->with('user.userMeta.package', 'user.installations')->get();
+            $data = Invoice::where(['user_id' => $user->id])->orderBy('created_at', 'DESC')->with('user.userMeta.package', 'user.installations')->get();
         } else {
             $data = Invoice::orderBy('created_at', 'DESC')->with('user.userMeta.package', 'user.installations')->get();
         }
@@ -47,7 +47,7 @@ class InvoiceController extends Controller
 
     function bulkCreateInvoice()
     {
-        $data = Installation::with('user')->get();
+        $data = Installation::where('status', 'Aktif')->with('user')->get();
         $tanggalSekarang = Carbon::now();
         $tanggal20BulanIni = $tanggalSekarang->copy()->addDays(19);
         $tanggalPertamaBulanDepan = $tanggalSekarang->addMonthsNoOverflow()->startOfMonth();
