@@ -6,6 +6,7 @@ use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\Installation;
 use App\Models\User;
+use App\Models\UserHasInstallation;
 use App\Models\UserMeta;
 use DateTime;
 use Illuminate\Http\Request;
@@ -15,7 +16,11 @@ class InstallationController extends Controller
 {
     function listInstallation(Request $request)
     {
-        $data = Installation::with('user.userMeta.package')->get();
+        $item = UserHasInstallation::where('user_id', $request->user()->id)->pluck('installation_id')->all();
+        $data = Installation::with('user.userMeta.package')
+            ->whereIn('id', $item)
+            ->get();
+
         return ResponseFormatter::success($data);
     }
 
@@ -68,6 +73,15 @@ class InstallationController extends Controller
             'date_install' => now()->format('Y-m-d H:i:s'),
             'end_date' => $newDate,
             'price' => $request->price,
+        ]);
+
+        return ResponseFormatter::success();
+    }
+
+    function proccessInstallation(Request $request)
+    {
+        Installation::where('id', $request->id)->first()->update([
+            'status' => 'Proses',
         ]);
 
         return ResponseFormatter::success();

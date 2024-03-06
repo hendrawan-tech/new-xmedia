@@ -33,13 +33,16 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/installation', [InstallationController::class, 'installation']);
     Route::get('/installation', [InstallationController::class, 'listInstallation']);
     Route::post('/installation/update', [InstallationController::class, 'updateInstallation']);
+    Route::post('/installation/proccess', [InstallationController::class, 'proccessInstallation']);
 
     // Invoice
     // Route::post('/invoice/create', [InvoiceController::class, 'createInvoice']);
     Route::post('/invoice/offline', [InvoiceController::class, 'paymentOffline']);
+    Route::post('/invoice/transfer', [InvoiceController::class, 'paymentTransfer']);
     // Route::post('/invoice/xendit', [InvoiceController::class, 'paymentXendit']);
     Route::get('/invoices', [InvoiceController::class, 'listInvoice']);
     Route::get('/invoice', [InvoiceController::class, 'myInvoice']);
+    Route::get('/payments', [InvoiceController::class, 'listPayment']);
     Route::post('/invoice/status', [InvoiceController::class, 'checkStatus']);
 
     // App

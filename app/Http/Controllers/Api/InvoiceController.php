@@ -7,11 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Installation;
 use App\Models\Invoice;
 use App\Models\Package;
+use App\Models\Payment;
 use App\Models\UserMeta;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class InvoiceController extends Controller
@@ -27,12 +28,18 @@ class InvoiceController extends Controller
         return ResponseFormatter::success($data);
     }
 
+    function listPayment(Request $request)
+    {
+        $data = Payment::all();
+        return ResponseFormatter::success($data);
+    }
+
     function paymentOffline(Request $request)
     {
         $invoice = Invoice::where('id', $request->invoice_id)->first();
         $invoice->update([
             'invoice_url' => "Cash",
-            'status' => "SUCCESS",
+            'status' => "Lunas",
         ]);
         $installation = Installation::where('user_id', $invoice->user_id)->first();
         $tanggalSekarang = Carbon::now();
@@ -42,6 +49,22 @@ class InvoiceController extends Controller
         $installation->update([
             'end_date' => $tanggal20BulanDepan,
         ]);
+        return ResponseFormatter::success();
+    }
+
+    function paymentTransfer(Request $request)
+    {
+        $invoice = Invoice::where('id', $request->invoice_id)->first();
+        $filetype = $request->file('image')->extension();
+        $text = Str::random(16) . '.' . $filetype;
+        $image = Storage::putFileAs('postImage', $request->file('image'), $text);
+        $invoice->update([
+            'invoice_url' => "Transfer",
+            'status' => "Proses",
+            'image' => $image,
+            'payment_id' => $request->payment,
+        ]);
+
         return ResponseFormatter::success();
     }
 
@@ -72,7 +95,7 @@ class InvoiceController extends Controller
                 Invoice::create([
                     'external_id' => $external_id,
                     'price' => (int)$package->price - $potonganHarga,
-                    'status' => "PENDING",
+                    'status' => "Belum Lunas",
                     'invoice_url' =>  "-",
                     'user_id' => $item['user']['id'],
                 ]);
@@ -86,7 +109,7 @@ class InvoiceController extends Controller
                 Invoice::create([
                     'external_id' => $external_id,
                     'price' => (int)$package->price,
-                    'status' => "PENDING",
+                    'status' => "Belum Lunas",
                     'invoice_url' =>  "-",
                     'user_id' => $item['user']['id'],
                 ]);
@@ -116,7 +139,7 @@ class InvoiceController extends Controller
             $invoice = Invoice::where('external_id', $payload['external_id'])->first();
             if ($invoice) {
                 $invoice->update([
-                    'status' => "SUCCESS",
+                    'status' => "Lunas",
                 ]);
 
                 $installation = Installation::where('user_id', $invoice->user_id)->first();
@@ -171,7 +194,7 @@ class InvoiceController extends Controller
                 Invoice::create([
                     'external_id' => $external_id,
                     'price' => (int)$package->price - $potonganHarga,
-                    'status' => "PENDING",
+                    'status' => "Belum Lunas",
                     'invoice_url' =>  "-",
                     'user_id' => $item['user']['id'],
                 ]);
@@ -185,7 +208,7 @@ class InvoiceController extends Controller
                 Invoice::create([
                     'external_id' => $external_id,
                     'price' => (int)$package->price,
-                    'status' => "PENDING",
+                    'status' => "Belum Lunas",
                     'invoice_url' =>  "-",
                     'user_id' => $item['user']['id'],
                 ]);

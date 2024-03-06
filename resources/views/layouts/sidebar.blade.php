@@ -26,6 +26,13 @@
     </li>
 
     <hr class="sidebar-divider my-0">
+    <li class="nav-item {{ request()->is('payments*') ? 'active' : '' }}">
+        <a class="nav-link" href="/payments">
+            <i class="fa fa-fw fa-receipt"></i>
+            <span>Metode Pembayaran</span></a>
+    </li>
+
+    <hr class="sidebar-divider my-0">
     <li class="nav-item {{ request()->is('content*') ? 'active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#contentCollapse"
             aria-expanded="{{ request()->is('content*') ? 'true' : 'false' }}" aria-controls="contentCollapse">

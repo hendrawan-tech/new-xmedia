@@ -16,9 +16,16 @@ return new class extends Migration
             $table->string('external_id');
             $table->string('invoice_url');
             $table->string('price');
-            $table->string('status');
+            $table->string('image', 80)->nullable();
+            $table->enum('status', ['Belum Lunas', 'Proses', 'Lunas']);
             $table->unsignedBigInteger('user_id');
-
+            $table->unsignedBigInteger('payment_id')->nullable();
+            $table
+                ->foreign('payment_id')
+                ->references('id')
+                ->on('payments')
+                ->onUpdate('CASCADE')
+                ->onDelete('CASCADE');
             $table->timestamps();
             $table->softDeletes();
         });
