@@ -36,7 +36,7 @@ class EmployeeController extends Controller
         ]);
 
         $data['role'] = 'teknisi';
-        $data['password'] = Hash::make('12345678');
+        $data['password'] = Hash::make('password');
 
         User::create($data);
 
