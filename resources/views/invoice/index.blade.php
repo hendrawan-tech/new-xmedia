@@ -24,7 +24,7 @@
                                 @foreach ($invoices as $item)
                                     <tr>
                                         <td>
-                                            <a href="/invoice/{{ $item->id }}">{{ $item->external_id }}</a>
+                                            <a href="/invoices/{{ $item->id }}">{{ $item->external_id }}</a>
                                         </td>
                                         <td>{{ Helper::price($item->price) }}</td>
                                         <td>{{ $item->status }}</td>

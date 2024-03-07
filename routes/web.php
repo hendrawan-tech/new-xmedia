@@ -31,6 +31,7 @@ Auth::routes();
 
 Route::middleware('auth')->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::post('invoices/confirm', [InvoiceController::class, 'confirm']);
     Route::resource('invoices', InvoiceController::class);
     Route::resource('user/clients', ClientController::class);
     Route::get('user/employees/{id}/invoice', [UserHasInvoiceController::class, 'index']);

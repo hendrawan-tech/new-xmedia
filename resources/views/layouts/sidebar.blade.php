@@ -28,8 +28,7 @@
     <hr class="sidebar-divider my-0">
     <li class="nav-item {{ request()->is('payments*') ? 'active' : '' }}">
         <a class="nav-link" href="/payments">
-            <i class="fa fa-fw fa-receipt"></i>
-            <span>Metode Pembayaran</span></a>
+            <i class="fa fa-fw fa-money-check"></i> <span>Metode Pembayaran</span></a>
     </li>
 
     <hr class="sidebar-divider my-0">

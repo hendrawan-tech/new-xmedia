@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('user_metas', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('nik');
             $table->string('phone');
             $table->string('address');
             $table->string('rt');

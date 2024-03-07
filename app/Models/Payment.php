@@ -12,4 +12,9 @@ class Payment extends Model
     use SoftDeletes;
 
     protected $guarded = ['id'];
+
+    public function invoice()
+    {
+        return $this->hasMany(Invoice::class);
+    }
 }

@@ -6,6 +6,7 @@ use App\Models\Installation;
 use App\Models\Package;
 use App\Models\User;
 use App\Models\UserMeta;
+use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -38,21 +39,43 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'xmedia_id' => 'required',
-            'name' => 'required|min:3',
-            'phone' => 'required|regex:/(0)[0-9]{9}/|max:16',
-            'address' => 'required|min:3',
-            'email' => 'required|min:3|unique:users,email',
-            'district_id' => 'required',
-            'ward_id' => 'required',
-            'rt' => 'required|numeric',
-            'rw' => 'required|numeric',
-            'package_id' => 'required',
-        ]);
+        if ($request->status == 'Aktif') {
+            $data = $request->validate([
+                'xmedia_id' => 'required',
+                'nik' => 'required|max:16',
+                'name' => 'required|min:3',
+                'phone' => 'required|regex:/(0)[0-9]{9}/|max:16',
+                'address' => 'required|min:3',
+                'email' => 'required|min:3|unique:users,email',
+                'district_id' => 'required',
+                'ward_id' => 'required',
+                'rt' => 'required|numeric',
+                'rw' => 'required|numeric',
+                'package_id' => 'required',
+                'date_install' => 'required',
+                'end_date' => 'required',
+                'status' => 'required',
+            ]);
+        } else {
+            $data = $request->validate([
+                'xmedia_id' => 'required',
+                'nik' => 'required|max:16',
+                'name' => 'required|min:3',
+                'phone' => 'required|regex:/(0)[0-9]{9}/|max:16',
+                'address' => 'required|min:3',
+                'email' => 'required|min:3|unique:users,email',
+                'district_id' => 'required',
+                'ward_id' => 'required',
+                'rt' => 'required|numeric',
+                'rw' => 'required|numeric',
+                'package_id' => 'required',
+                'status' => 'required',
+            ]);
+        }
 
         $userMeta = UserMeta::create([
             'address' => $data['address'],
+            'nik' => $data['nik'],
             'xmedia_id' => $data['xmedia_id'],
             'rt' => $data['rt'],
             'rw' => $data['rw'],
@@ -78,11 +101,11 @@ class ClientController extends Controller
         ]);
 
         Installation::create([
-            'status' => "Antrian",
-            'date_install' => now()->format('Y-m-d H:i:s'),
-            'end_date' => now()->format('Y-m-d H:i:s'),
+            'status' => $request->status == 'Aktif' ? "Aktif" : 'Antrian',
+            'date_install' => $request->status == 'Aktif' ? $data['date_install'] : now()->format('Y-m-d H:i:s'),
+            'end_date' => $request->status == 'Aktif' ? $data['end_date'] : Carbon::now()->addMonth()->startOfMonth(),
             'user_id' => $user->id,
-            'first_payment' => '1',
+            'first_payment' => $request->status == 'Aktif' ? '2' : '1',
         ]);
 
         return redirect('/user/clients')->with('success', 'Pelanggan Ditambah');
