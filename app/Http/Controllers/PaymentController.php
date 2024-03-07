@@ -38,9 +38,11 @@ class PaymentController extends Controller
             'logo' => 'file|between:0,2048|mimes:jpeg,jpg,png',
         ]);
 
-        $filetype = $request->file('logo')->extension();
-        $text = Str::random(16) . '.' . $filetype;
-        $data['logo'] = Storage::putFileAs('postImage', $request->file('logo'), $text);
+        if ($request->logo) {
+            $filetype = $request->file('logo')->extension();
+            $text = Str::random(16) . '.' . $filetype;
+            $data['logo'] = Storage::putFileAs('postImage', $request->file('logo'), $text);
+        }
 
         Payment::create($data);
 
@@ -72,11 +74,13 @@ class PaymentController extends Controller
             'name' => 'required|min:5',
             'bank_name' => 'required|min:5',
             'bank_number' => 'required|min:5',
-            'logo' => 'required|file|between:0,2048|mimes:jpeg,jpg,png',
+            'logo' => 'file|between:0,2048|mimes:jpeg,jpg,png',
         ]);
 
-        if ($request['image']) {
-            Storage::delete($payment->image);
+        if ($request->logo) {
+            if ($payment->logo !== null) {
+                Storage::delete($payment->image);
+            }
             $filetype = $request->file('logo')->extension();
             $text = Str::random(16) . '.' . $filetype;
             $data['logo'] = Storage::putFileAs('postImage', $request->file('logo'), $text);

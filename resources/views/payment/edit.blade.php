@@ -67,7 +67,7 @@
                                                 <div class="form-group">
                                                     <label for="">Logo Bank</label>
                                                     <input type="file" id="input-file-now" name="logo" class="dropify"
-                                                        data-default-file="{{ asset($promo->logo) }}" />
+                                                        data-default-file="{{ asset($payment->logo) }}" />
                                                     @error('logo')
                                                         <span class="form-text text-danger">{{ $message }}</span>
                                                     @enderror

@@ -35,6 +35,18 @@
                             </div>
                             <div class="col-12 col-lg-4">
                                 <div class="form-group">
+                                    <label>NIK</label>
+                                    <input type="text" class="form-control @error('nik') is-invalid @enderror"
+                                        name="nik" value="{{ old('nik') }}">
+                                    @error('nik')
+                                        <small class="form-text text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-lg-4">
+                                <div class="form-group">
                                     <label>Email</label>
                                     <input type="text" class="form-control @error('email') is-invalid @enderror"
                                         name="email" value="{{ old('email') }}">
@@ -43,9 +55,7 @@
                                     @enderror
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12 col-lg-6">
+                            <div class="col-12 col-lg-4">
                                 <div class="form-group">
                                     <label>No Hp</label>
                                     <input type="text" class="form-control @error('phone') is-invalid @enderror"
@@ -55,7 +65,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6">
+                            <div class="col-12 col-lg-4">
                                 <div class="form-group">
                                     <label>Paket Internet</label>
                                     <select class="form-control @error('package_id') is-invalid @enderror"
@@ -75,7 +85,21 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-12 col-lg-6">
+                            <div class="col-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Status</label>
+                                    <select class="form-control @error('status') is-invalid @enderror status-select"
+                                        name="status">
+                                        <option value="">Pilih Status</option>
+                                        <option value="Aktif">Aktif</option>
+                                        <option value="Antrian">Belum Aktif</option>
+                                    </select>
+                                    @error('status')
+                                        <small class="form-text text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-4">
                                 <div class="form-group">
                                     <label>Kecamatan</label>
                                     <select id="district" class="form-control @error('district_id') is-invalid @enderror"
@@ -93,7 +117,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6">
+                            <div class="col-12 col-lg-4">
                                 <div class="form-group">
                                     <label>Kelurahan / Desa</label>
                                     <select id="ward" class="form-control @error('ward_id') is-invalid @enderror"
@@ -101,6 +125,28 @@
                                         <option value="">Pilih Keluarahan / Desa</option>
                                     </select>
                                     @error('ward_id')
+                                        <small class="form-text text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row tanggal-section d-none">
+                            <div class="col-12 col-lg-6">
+                                <div class="form-group">
+                                    <label>Tanggal Pemasangan</label>
+                                    <input type="date" class="form-control @error('date_install') is-invalid @enderror"
+                                        name="date_install" value="{{ old('date_install') }}">
+                                    @error('date_install')
+                                        <small class="form-text text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                                <div class="form-group">
+                                    <label>Tanggal Aktif</label>
+                                    <input type="date" class="form-control @error('end_date') is-invalid @enderror"
+                                        name="end_date" value="{{ old('end_date') }}">
+                                    @error('end_date')
                                         <small class="form-text text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
@@ -145,6 +191,15 @@
     @push('script')
         <script>
             $(document).ready(function() {
+                $('.status-select').change(function() {
+                    var selectedStatus = $(this).val();
+                    if (selectedStatus === 'Aktif') {
+                        $('.tanggal-section').removeClass('d-none');
+                    } else {
+                        $('.tanggal-section').addClass('d-none');
+                    }
+                });
+
                 $('#district').change(function() {
                     var districtId = $(this).val();
                     var districtName = $(this).find('option:selected')

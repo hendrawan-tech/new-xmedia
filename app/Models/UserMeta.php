@@ -12,6 +12,7 @@ class UserMeta extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'nik',
         'phone',
         'address',
         'rt',

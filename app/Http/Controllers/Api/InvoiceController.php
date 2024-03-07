@@ -42,12 +42,10 @@ class InvoiceController extends Controller
             'status' => "Lunas",
         ]);
         $installation = Installation::where('user_id', $invoice->user_id)->first();
-        $tanggalSekarang = Carbon::now();
-        $tanggalPertamaBulanDepan = $tanggalSekarang->addMonthsNoOverflow()->startOfMonth();
-        $tanggal20BulanDepan = $tanggalPertamaBulanDepan->addDays(19);
 
         $installation->update([
-            'end_date' => $tanggal20BulanDepan,
+            'end_date' => Carbon::now()->addMonth()->startOfMonth(),
+            'first_payment' => '2',
         ]);
         return ResponseFormatter::success();
     }
@@ -72,9 +70,9 @@ class InvoiceController extends Controller
     {
         $data = Installation::where('status', 'Aktif')->with('user')->get();
         $tanggalSekarang = Carbon::now();
-        $tanggal20BulanIni = $tanggalSekarang->copy()->addDays(19);
+        $tanggal25Ini = $tanggalSekarang->copy()->endOfMonth()->addDays(6);
         $tanggalPertamaBulanDepan = $tanggalSekarang->addMonthsNoOverflow()->startOfMonth();
-        $tanggal20BulanDepan = $tanggalPertamaBulanDepan->addDays(19);
+        $tanggal25Depan = $tanggalPertamaBulanDepan->addDays(24);
 
         foreach ($data as $item) {
             if ($item['first_payment'] == '1') {
@@ -85,11 +83,10 @@ class InvoiceController extends Controller
                 $package = Package::where('id', $userMeta['package_id'])->first();
 
                 $tanggalAwal = Carbon::parse($item['date_install']);
-                $jarakHari = 0;
-                if ($tanggalAwal->greaterThanOrEqualTo(Carbon::now()->startOfMonth()->addDays(19))) {
-                    $jarakHari = $tanggalAwal->diffInDays($tanggal20BulanDepan);
+                if ($tanggalAwal->day >= 19) {
+                    $jarakHari = $tanggalAwal->diffInDays($tanggal25Depan);
                 } else {
-                    $jarakHari = $tanggalAwal->diffInDays($tanggal20BulanIni);
+                    $jarakHari = $tanggalAwal->diffInDays($tanggal25Ini);
                 }
                 $potonganHarga = 3000 * $jarakHari;
                 Invoice::create([

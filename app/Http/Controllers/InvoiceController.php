@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Installation;
 use App\Models\Invoice;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -43,7 +45,7 @@ class InvoiceController extends Controller
      */
     public function show(Invoice $invoice)
     {
-        //
+        return view('invoice.detail', compact('invoice'));
     }
 
     /**
@@ -65,6 +67,24 @@ class InvoiceController extends Controller
         ]));
 
         return redirect('/invoices')->with('success', 'Tagihan Diubah');
+    }
+
+    public function confirm(Request $request)
+    {
+        $invoice = Invoice::where('id', $request->invoice_id)->first();
+
+        $installation = Installation::where('user_id', $invoice->user_id)->first();
+
+        $installation->update([
+            'end_date' => Carbon::now()->addMonth()->startOfMonth(),
+            'first_payment' => '2',
+        ]);
+
+        $invoice->update([
+            'status' => "Lunas",
+        ]);
+
+        return redirect()->back()->with('success', 'Tagihan Dikonfirmasi');
     }
 
     /**

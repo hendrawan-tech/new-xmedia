@@ -37,11 +37,11 @@
                                         </td>
                                         <td>{{ Helper::time($item->created_at) }}</td>
                                         <td class="text-center">
-                                            <a href="/content/promos/{{ $item->id }}/edit"
+                                            <a href="/payments/{{ $item->id }}/edit"
                                                 class="btn btn-sm btn-primary btn-circle mr-2">
                                                 <i class="fa fa-pen"></i>
                                             </a>
-                                            <a onclick='modal_konfir("/content/promos/{{ $item->id }}")' href="#"
+                                            <a onclick='modal_konfir("/payments/{{ $item->id }}")' href="#"
                                                 class="btn btn-sm btn-danger btn-circle">
                                                 <i class="fa fa-trash"></i>
                                             </a>

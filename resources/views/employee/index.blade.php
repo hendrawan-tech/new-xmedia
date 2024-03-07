@@ -30,11 +30,11 @@
                                         <td class="text-center">
                                             <a href="/user/employees/{{ $item->id }}/invoice"
                                                 class="btn btn-sm btn-success btn-circle">
-                                                <i class="fa fa-invoice"></i>
+                                                <i class="fas fa-receipt"></i>
                                             </a>
                                             <a href="/user/employees/{{ $item->id }}/installation"
                                                 class="btn btn-sm btn-primary btn-circle">
-                                                <i class="fa fa-gear"></i>
+                                                <i class="fas fa-cogs"></i>
                                             </a>
                                             <a onclick='modal_konfir("/user/employees/{{ $item->id }}")' href="#"
                                                 class="btn btn-sm btn-danger btn-circle">
