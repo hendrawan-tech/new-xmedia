@@ -21,9 +21,9 @@ class InvoiceController extends Controller
     {
         $user = $request->user();
         if ($user->role == 'user') {
-            $data = Invoice::where(['user_id' => $user->id])->orderBy('created_at', 'DESC')->with('user.userMeta.package', 'user.installations')->get();
+            $data = Invoice::where(['user_id' => $user->id])->orderBy('created_at', 'DESC')->with('user.userMeta.package', 'user.installations')->paginate($request->perpage);
         } else {
-            $data = Invoice::orderBy('created_at', 'DESC')->with('user.userMeta.package', 'user.installations')->get();
+            $data = Invoice::orderBy('created_at', 'DESC')->with('user.userMeta.package', 'user.installations')->paginate($request->perpage);
         }
         return ResponseFormatter::success($data);
     }
@@ -56,14 +56,14 @@ class InvoiceController extends Controller
         $filetype = $request->file('image')->extension();
         $text = Str::random(16) . '.' . $filetype;
         $image = Storage::putFileAs('postImage', $request->file('image'), $text);
-        $invoice->update([
+        $data = [
             'invoice_url' => "Transfer",
             'status' => "Proses",
             'image' => $image,
             'payment_id' => $request->payment,
-        ]);
-
-        return ResponseFormatter::success();
+        ];
+        $invoice->update($data);
+        return ResponseFormatter::success($invoice);
     }
 
     function bulkCreateInvoice()

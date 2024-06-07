@@ -78,9 +78,9 @@ class PaymentController extends Controller
         ]);
 
         if ($request->logo) {
-            if ($payment->logo !== null) {
-                Storage::delete($payment->image);
-            }
+            // if ($payment->logo !== null) {
+            //     Storage::delete($payment->image);
+            // }
             $filetype = $request->file('logo')->extension();
             $text = Str::random(16) . '.' . $filetype;
             $data['logo'] = Storage::putFileAs('postImage', $request->file('logo'), $text);

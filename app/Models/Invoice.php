@@ -11,15 +11,9 @@ class Invoice extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = [
-        'external_id',
-        'invoice_url',
-        'price',
-        'status',
-        'user_id',
+    protected $guarded = [
+        'id'
     ];
-
-
 
     public function user()
     {

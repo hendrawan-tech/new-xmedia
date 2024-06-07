@@ -75,6 +75,16 @@ class UserController extends Controller
         return ResponseFormatter::success();
     }
 
+    function updateUser(Request $request)
+    {
+        $userLogin = $request->user();
+        $user = User::where('id', $userLogin->id)->first();
+        $user->update([
+            'name' => $request->name,
+        ]);
+        return ResponseFormatter::success($user);
+    }
+
     public function changePassword(Request $request)
     {
         $request->validate([

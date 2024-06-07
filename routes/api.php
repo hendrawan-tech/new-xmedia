@@ -27,6 +27,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', [UserController::class, 'user']);
     Route::get('/users', [UserController::class, 'getUser']);
     Route::post('/user', [UserController::class, 'createUser']);
+    Route::put('/user', [UserController::class, 'updateUser']);
     Route::post('/user/change-password', [UserController::class, 'changePassword']);
 
     // Installation
@@ -61,5 +62,4 @@ Route::get('/ward', [DataController::class, 'ward']);
 Route::get('/package', [DataController::class, 'package']);
 
 Route::get('/bulk-invoice', [InvoiceController::class, 'bulkCreateInvoice']);
-Route::get('/reset-data', [InvoiceController::class, 'resetData']);
 Route::post('/invoice/callback', [InvoiceController::class, 'handleCallback']);
