@@ -30,8 +30,12 @@
                                         <td>{{ $item->speed }}</td>
                                         <td>{{ Helper::time($item->created_at) }}</td>
                                         <td class="text-center">
-                                            <a onclick='modal_konfir("/content/articles/{{ $item->id }}")'
-                                                href="#" class="btn btn-sm btn-danger btn-circle">
+                                            <a href="/packages/{{ $item->id }}/edit"
+                                                class="btn btn-sm btn-primary btn-circle">
+                                                <i class="fa fa-pen"></i>
+                                            </a>
+                                            <a onclick='modal_konfir("/packages/{{ $item->id }}")' href="#"
+                                                class="btn btn-sm btn-danger btn-circle">
                                                 <i class="fa fa-trash"></i>
                                             </a>
                                         </td>

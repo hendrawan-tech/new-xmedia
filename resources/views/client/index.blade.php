@@ -30,6 +30,10 @@
                                         <td>{{ $item->installations->status }}</td>
                                         <td>{{ Helper::time($item->created_at) }}</td>
                                         <td class="text-center">
+                                            <a href="/user/clients/{{ $item->id }}/edit"
+                                                class="btn btn-sm btn-primary btn-circle">
+                                                <i class="fa fa-pen"></i>
+                                            </a>
                                             <a onclick='modal_konfir("/user/clients/{{ $item->id }}")' href="#"
                                                 class="btn btn-sm btn-danger btn-circle">
                                                 <i class="fa fa-trash"></i>

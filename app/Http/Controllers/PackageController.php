@@ -53,7 +53,7 @@ class PackageController extends Controller
      */
     public function edit(Package $package)
     {
-        //
+        return view('package.edit', compact('package'));
     }
 
     /**
@@ -61,7 +61,15 @@ class PackageController extends Controller
      */
     public function update(Request $request, Package $package)
     {
-        //
+        $data = $request->validate([
+            'name' => 'required|min:5',
+            'price' => 'required|numeric',
+            'speed' => 'required',
+            'description' => 'required|min:5',
+        ]);
+        $data['month'] = "1 Bulan";
+        $package->update($data);
+        return redirect('/packages')->with('success', 'Paket Internet Diubah');
     }
 
     /**
