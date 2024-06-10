@@ -21,7 +21,8 @@
                     <h6 class="m-0 font-weight-bold text-primary">Edit Paket</h6>
                 </div>
                 <div class="card-body">
-                    <form action="/packages" method="POST">
+                    <form action="/packages/{{ $package->id }}" method="POST">
+                        @method('put')
                         @csrf
                         <div class="row">
                             <div class="col-12 col-lg-4">
