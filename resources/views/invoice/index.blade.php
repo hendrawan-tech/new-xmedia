@@ -14,6 +14,7 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
+                                    <th>Nama</th>
                                     <th>Harga</th>
                                     <th>Status</th>
                                     <th>Tanggal Dibuat</th>
@@ -26,6 +27,7 @@
                                         <td>
                                             <a href="/invoices/{{ $item->id }}">{{ $item->external_id }}</a>
                                         </td>
+                                        <td>{{ $item->user->name }}</td>
                                         <td>{{ Helper::price($item->price) }}</td>
                                         <td>{{ $item->status }}</td>
                                         <td>{{ Helper::time($item->created_at) }}</td>

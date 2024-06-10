@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Installation;
 use App\Models\Invoice;
+use App\Models\User;
+use App\Models\UserMeta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class HomeController extends Controller
 {
@@ -25,11 +29,29 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
-        if ($user->role == 'admin') {
-            return view('dashboard.index');
-        } else {
-            return view('dashboard.home');
+        $totalClient = User::where('role', 'user')->count();
+        $totalInvoice = Invoice::where('status', 'Lunas')->sum('price');
+        $totalInstallation = Installation::where('status', 'Antrian')->count();
+        $invoicePending = Invoice::where('status', 'Proses')->orderBy('updated_at', 'DESC')->get();
+
+        $data_request = Http::get('https://ibnux.github.io/data-indonesia/kecamatan/3511.json');
+
+        if ($data_request->successful()) {
+            $districts = $data_request->json();
+
+            $clientDistrict = [];
+
+            foreach ($districts as $district) {
+                $meta = UserMeta::where('district_id', $district['id'])->count();
+
+                $clientDistrict[] = [
+                    'name' => $district['nama'],
+                    'total' => $meta,
+                ];
+            }
         }
+
+
+        return view('dashboard.index', compact('totalClient', 'totalInvoice', 'totalInstallation', 'invoicePending', 'clientDistrict'));
     }
 }

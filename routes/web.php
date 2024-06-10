@@ -10,6 +10,8 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PromoController;
 use App\Http\Controllers\UserHasInstallationController;
 use App\Http\Controllers\UserHasInvoiceController;
+use App\Http\Controllers\Auth\LoginControllerCustom;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,7 +29,10 @@ Route::get('/', function () {
     return redirect('/home');
 });
 
-Auth::routes();
+// Custom login routes
+Route::get('/login', [LoginControllerCustom::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginControllerCustom::class, 'login']);
+Route::post('/logout', [LoginControllerCustom::class, 'logout'])->name('logout');
 
 Route::middleware('auth')->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

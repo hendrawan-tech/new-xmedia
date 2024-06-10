@@ -68,48 +68,57 @@ class InvoiceController extends Controller
 
     function bulkCreateInvoice()
     {
-        $data = Installation::where('status', 'Aktif')->with('user')->get();
-        $tanggalSekarang = Carbon::now();
+        $tanggalInstall = Carbon::now();
+        $data = Installation::where('status', 'Aktif')
+            ->with('user')
+            ->whereDay('date_install', $tanggalInstall->day)
+            ->get();
+        $tanggalSekarang = Carbon::now()->setTimezone('Asia/Jakarta');
         $tanggal25Ini = $tanggalSekarang->copy()->endOfMonth()->addDays(6);
-        $tanggalPertamaBulanDepan = $tanggalSekarang->addMonthsNoOverflow()->startOfMonth();
-        $tanggal25Depan = $tanggalPertamaBulanDepan->addDays(24);
+        $tanggalPertamaBulanDepan = $tanggalSekarang->copy()->addMonthsNoOverflow()->startOfMonth();
+        $tanggal25Depan = $tanggalPertamaBulanDepan->copy()->addDays(24);
+        $hasInvoice = false;
 
         foreach ($data as $item) {
-            if ($item['first_payment'] == '1') {
-                $datePart = date("Ymd");
-                $randomPart = str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT);
-                $external_id = "INV-$datePart-$randomPart";
-                $userMeta = UserMeta::where('id', $item['user']['user_meta_id'])->first();
-                $package = Package::where('id', $userMeta['package_id'])->first();
+            $invoice = Invoice::where('user_id', $item->user_id)->latest()->first();
+            $hasInvoice = $invoice ? $invoice->created_at->format('m') == $tanggalSekarang->format('m') : false;
+            if (!$hasInvoice) {
+                if ($item['first_payment'] == '1') {
+                    $datePart = date("Ymd");
+                    $randomPart = str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT);
+                    $external_id = "INV-$datePart-$randomPart";
+                    $userMeta = UserMeta::where('id', $item['user']['user_meta_id'])->first();
+                    $package = Package::where('id', $userMeta['package_id'])->first();
 
-                $tanggalAwal = Carbon::parse($item['date_install']);
-                if ($tanggalAwal->day >= 19) {
-                    $jarakHari = $tanggalAwal->diffInDays($tanggal25Depan);
+                    $tanggalAwal = Carbon::parse($item['date_install']);
+                    if ($tanggalAwal->day >= 19) {
+                        $jarakHari = $tanggalAwal->diffInDays($tanggal25Depan);
+                    } else {
+                        $jarakHari = $tanggalAwal->diffInDays($tanggal25Ini);
+                    }
+                    $potonganHarga = 3000 * $jarakHari;
+                    Invoice::create([
+                        'external_id' => $external_id,
+                        'price' => (int)$package->price - $potonganHarga,
+                        'status' => "Belum Lunas",
+                        'invoice_url' =>  "-",
+                        'user_id' => $item['user']['id'],
+                    ]);
                 } else {
-                    $jarakHari = $tanggalAwal->diffInDays($tanggal25Ini);
-                }
-                $potonganHarga = 3000 * $jarakHari;
-                Invoice::create([
-                    'external_id' => $external_id,
-                    'price' => (int)$package->price - $potonganHarga,
-                    'status' => "Belum Lunas",
-                    'invoice_url' =>  "-",
-                    'user_id' => $item['user']['id'],
-                ]);
-            } else {
-                $datePart = date("Ymd");
-                $randomPart = str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT);
-                $external_id = "INV-$datePart-$randomPart";
-                $userMeta = UserMeta::where('id', $item['user']['user_meta_id'])->first();
-                $package = Package::where('id', $userMeta['package_id'])->first();
+                    $datePart = date("Ymd");
+                    $randomPart = str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT);
+                    $external_id = "INV-$datePart-$randomPart";
+                    $userMeta = UserMeta::where('id', $item['user']['user_meta_id'])->first();
+                    $package = Package::where('id', $userMeta['package_id'])->first();
 
-                Invoice::create([
-                    'external_id' => $external_id,
-                    'price' => (int)$package->price,
-                    'status' => "Belum Lunas",
-                    'invoice_url' =>  "-",
-                    'user_id' => $item['user']['id'],
-                ]);
+                    Invoice::create([
+                        'external_id' => $external_id,
+                        'price' => (int)$package->price,
+                        'status' => "Belum Lunas",
+                        'invoice_url' =>  "-",
+                        'user_id' => $item['user']['id'],
+                    ]);
+                }
             }
         }
 
