@@ -60,6 +60,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 Route::get('/district', [DataController::class, 'district']);
 Route::get('/ward', [DataController::class, 'ward']);
 Route::get('/package', [DataController::class, 'package']);
+Route::get('/client-perward', [DataController::class, 'getPerWard']);
 
 Route::get('/bulk-invoice', [InvoiceController::class, 'bulkCreateInvoice']);
 Route::post('/invoice/callback', [InvoiceController::class, 'handleCallback']);

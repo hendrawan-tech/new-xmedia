@@ -52,6 +52,6 @@ class HomeController extends Controller
         }
 
 
-        return view('dashboard.index', compact('totalClient', 'totalInvoice', 'totalInstallation', 'invoicePending', 'clientDistrict'));
+        return view('dashboard.index', compact('totalClient', 'totalInvoice', 'totalInstallation', 'invoicePending', 'clientDistrict', 'districts'));
     }
 }

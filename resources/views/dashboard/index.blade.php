@@ -128,4 +128,87 @@
             </div>
         </div>
     </div>
+
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Daftar Pelanggan Per-Kelurahan</h6>
+                    <div>
+                        <select name="district_id" id="districtForm" class="form-control">
+                            @foreach ($districts as $item)
+                                <option value="{{ $item['id'] }}">{{ $item['nama'] }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTableWard" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Keluarahan</th>
+                                    <th>Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
+
+@push('script')
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                url: `/api/client-perward?district_id={{ $districts[0]['id'] }}`,
+                type: 'GET',
+                success: function(response) {
+                    $('#dataTableWard tbody').empty();
+                    $.each(response.data, function(index, item) {
+                        $('#dataTableWard tbody').append(`
+                            <tr>
+                                <td>${index+1}</td>
+                                <td>${item.name}</td>
+                                <td>${item.total}</td>
+                            </tr>
+                        `);
+                    });
+                },
+                error: function(error) {
+                    console.error('Error:', error);
+                }
+            });
+
+            $('#districtForm').change(function() {
+                var districtId = $(this).val();
+
+                $.ajax({
+                    url: `/api/client-perward?district_id=${districtId}`,
+                    type: 'GET',
+                    success: function(response) {
+                        $('#dataTableWard tbody').empty();
+                        $.each(response.data, function(index, item) {
+                            $('#dataTableWard tbody').append(`
+                            <tr>
+                                <td>${index+1}</td>
+                                <td>${item.name}</td>
+                                <td>${item.total}</td>
+                            </tr>
+                        `);
+                        });
+                    },
+                    error: function(error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+        });
+    </script>
+@endpush
