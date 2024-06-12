@@ -215,7 +215,7 @@
 
                             var wardSelect = $('#ward');
                             wardSelect.empty();
-
+                            wardSelect.append('<option value="">Pilih Kelurahan / Desa</option>');
                             $.each(wards, function(key, ward) {
                                 wardSelect.append('<option value="' + ward.id + '">' + ward
                                     .nama + '</option>');
