@@ -8,6 +8,7 @@ use App\Models\Installation;
 use App\Models\Invoice;
 use App\Models\Package;
 use App\Models\Payment;
+use App\Models\UserHasInvoice;
 use App\Models\UserMeta;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -23,7 +24,11 @@ class InvoiceController extends Controller
         if ($user->role == 'user') {
             $data = Invoice::where(['user_id' => $user->id])->orderBy('created_at', 'DESC')->with('user.userMeta.package', 'user.installations')->paginate($request->perpage);
         } else {
-            $data = Invoice::orderBy('created_at', 'DESC')->with('user.userMeta.package', 'user.installations')->paginate($request->perpage);
+            $userInvoices = UserHasInvoice::where('user_id', $user->id)->pluck('invoice_id');
+            $data = Invoice::whereIn('id', $userInvoices)
+                ->orderBy('created_at', 'DESC')
+                ->with(['user.userMeta.package', 'user.installations'])
+                ->paginate($request->perpage);
         }
         return ResponseFormatter::success($data);
     }

@@ -29,6 +29,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/user', [UserController::class, 'createUser']);
     Route::put('/user', [UserController::class, 'updateUser']);
     Route::post('/user/change-password', [UserController::class, 'changePassword']);
+    Route::post('/user/location', [UserController::class, 'setLocation']);
 
     // Installation
     Route::post('/installation', [InstallationController::class, 'installation']);

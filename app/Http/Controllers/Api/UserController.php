@@ -27,7 +27,7 @@ class UserController extends Controller
 
     function getUser()
     {
-        $data = User::where('role', 'user')->get();
+        $data = User::where('role', 'user')->with('userMeta')->get();
         return ResponseFormatter::success($data);
     }
 
@@ -82,6 +82,16 @@ class UserController extends Controller
         $user->update([
             'name' => $request->name,
         ]);
+        return ResponseFormatter::success($user);
+    }
+
+    function setLocation(Request $request)
+    {
+        $user = UserMeta::where('id', $request->user_meta)->first();
+        $user->update([
+            'longlat' => $request->longlat,
+        ]);
+        $user = User::where('id', $request->user_id)->with('userMeta')->first();
         return ResponseFormatter::success($user);
     }
 
