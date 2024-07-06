@@ -14,9 +14,12 @@
                         <div class="form-group">
                             <label>Status</label>
                             <select class="form-control @error('name') is-invalid @enderror" name="status">
-                                <option value="PENDING" {{ $invoice->status == 'PENDING' ? 'selected' : '' }}>Pending
+                                <option value="Belum Lunas" {{ $invoice->status == 'Belum Lunas' ? 'selected' : '' }}>Belum
+                                    Lunas
                                 </option>
-                                <option value="SUCCESS" {{ $invoice->status == 'SUCCESS' ? 'selected' : '' }}>Success
+                                <option value="Proses" {{ $invoice->status == 'Proses' ? 'selected' : '' }}>Proses
+                                </option>
+                                <option value="Lunas" {{ $invoice->status == 'Lunas' ? 'selected' : '' }}>Lunas
                                 </option>
                             </select>
                             @error('status')
