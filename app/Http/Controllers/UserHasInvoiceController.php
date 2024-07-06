@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Invoice;
 use App\Models\UserHasInvoice;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class UserHasInvoiceController extends Controller
 {
@@ -33,20 +34,36 @@ class UserHasInvoiceController extends Controller
      */
     public function store(Request $request, $id)
     {
-        $data = $request->validate([
+        // Ambil data tagihan dari local storage jika tersedia
+        $selectedInvoices = json_decode($request->input('selectedInvoices'), true) ?? [];
+
+        // Validasi data dari local storage
+        $validator = Validator::make(['invoices' => $selectedInvoices], [
             'invoices' => 'required|array',
             'invoices.*' => 'integer|exists:invoices,id',
         ]);
 
-        foreach ($data['invoices'] as $item) {
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        // Simpan data tagihan yang sudah divalidasi
+        foreach ($selectedInvoices as $item) {
             UserHasInvoice::create([
                 'user_id' => $id,
                 'invoice_id' => $item,
             ]);
         }
 
+        // Hapus data dari local storage setelah disimpan ke database
+        // (Opsional: jika menggunakan session untuk menyimpan selectedInvoices)
+        // $request->session()->forget('selectedInvoices');
+
         return redirect('user/employees')->with('success', 'Data Tagihan Diupdate');
     }
+
 
     /**
      * Display the specified resource.

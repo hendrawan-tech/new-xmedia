@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+    @php
+        $selectedInvoices = [];
+    @endphp
     <div class="row justify-content-center">
         <div class="col-12">
             <div class="card shadow mb-4">
@@ -10,14 +13,16 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
-                            <form action="/user/employees/{{ $id }}/invoice" method="POST">
+                            <form action="/user/employees/{{ $id }}/invoice" method="POST" id="invoiceForm">
                                 @csrf
+                                <input type="hidden" name="selectedInvoices" id="selectedInvoices"
+                                    value="{{ json_encode($selectedInvoices) }}">
                                 <label for="invoices" class="form-label">
                                     Pilih Tagihan
                                     <span class="text-danger">*</span>
                                 </label>
                                 <div class="table-responsive table-card m-1">
-                                    <table class="table table-nowrap table-striped-columns mb-0">
+                                    <table class="table table-nowrap table-striped-columns mb-0" id="dataTable">
                                         <thead class="table-light">
                                             <tr>
                                                 <th scope="col">Pilih</th>
@@ -33,9 +38,9 @@
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="checkbox"
                                                                 value="{{ $item->id }}" name="invoices[]"
-                                                                id="cardtableCheck{{ $key + 1 }}}">
+                                                                id="cardtableCheck{{ $key + 1 }}">
                                                             <label class="form-check-label"
-                                                                for="cardtableCheck{{ $key + 1 }}}"></label>
+                                                                for="cardtableCheck{{ $key + 1 }}"></label>
                                                         </div>
                                                     </td>
                                                     <td>{{ $item->user->name }}</td>
@@ -64,3 +69,28 @@
         </div>
     </div>
 @endsection
+
+@push('script')
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const selectedInvoicesInput = document.getElementById('selectedInvoices');
+            let selectedInvoices = JSON.parse(selectedInvoicesInput.value) || [];
+
+            const checkboxes = document.querySelectorAll('input[name="invoices[]"]');
+
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        selectedInvoices.push(this.value);
+                    } else {
+                        const index = selectedInvoices.indexOf(this.value);
+                        if (index !== -1) {
+                            selectedInvoices.splice(index, 1);
+                        }
+                    }
+                    selectedInvoicesInput.value = JSON.stringify(selectedInvoices);
+                });
+            });
+        });
+    </script>
+@endpush
