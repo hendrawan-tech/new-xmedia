@@ -44,7 +44,6 @@ Route::middleware('auth')->group(function () {
     Route::get('user/employees/{id}/installation', [UserHasInstallationController::class, 'index']);
     Route::post('user/employees/{id}/installation', [UserHasInstallationController::class, 'store']);
     Route::resource('user/employees', EmployeeController::class);
-    Route::resource('user/clients', ClientController::class);
     Route::resource('packages', PackageController::class);
     Route::resource('content/articles', ArticleController::class);
     Route::resource('content/promos', PromoController::class);
