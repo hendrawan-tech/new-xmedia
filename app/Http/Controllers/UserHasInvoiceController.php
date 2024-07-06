@@ -14,9 +14,13 @@ class UserHasInvoiceController extends Controller
      */
     public function index($id)
     {
-        $invoices = Invoice::orderBy('created_at', 'DESC')->whereNull('deleted_at')->get();
+        $invoices = Invoice::orderBy('created_at', 'DESC')->whereHas('user', function ($query) {
+            $query->whereNull('deleted_at');
+        })->get();
         $userHasInvoices = UserHasInvoice::pluck('invoice_id')->all();
-        $data = Invoice::whereNotIn('id', $userHasInvoices)->where('status', 'Belum Lunas')->orderBy('created_at', 'DESC')->get();
+        $data = Invoice::whereNotIn('id', $userHasInvoices)->where('status', 'Belum Lunas')->whereHas('user', function ($query) {
+            $query->whereNull('deleted_at');
+        })->orderBy('created_at', 'DESC')->get();
 
         return view('employee.invoice', compact('data', 'id'));
     }

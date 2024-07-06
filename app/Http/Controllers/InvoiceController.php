@@ -16,12 +16,10 @@ class InvoiceController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $invoices = $user->role == 'admin' ? Invoice::orderBy('created_at', 'DESC')->get() : Invoice::where('user_id', Auth::user()->id)->get();
-        if ($user->role == 'admin') {
-            return view('invoice.index', compact('invoices'));
-        } else {
-            return view('invoice', compact('invoices'));
-        }
+        $invoices = Invoice::orderBy('created_at', 'DESC')->whereHas('user', function ($query) {
+            $query->whereNull('deleted_at');
+        })->get();
+        return view('invoice.index', compact('invoices'));
     }
 
     /**
