@@ -133,6 +133,43 @@ class InvoiceController extends Controller
         return ResponseFormatter::success();
     }
 
+    function bulkCreateInvoice2()
+    {
+        $tanggalSekarang = Carbon::now()->setTimezone('Asia/Jakarta');
+        $bulanSekarang = $tanggalSekarang->month;
+        $tahunSekarang = $tanggalSekarang->year;
+
+        // Ambil data instalasi yang aktif dan user-nya tidak dihapus secara lunak
+        $data = Installation::where('status', 'Aktif')
+            ->with(['user' => function ($query) {
+                $query->whereNull('deleted_at'); // Periksa pengguna yang tidak dihapus secara lunak
+            }])
+            ->whereMonth('created_at', $bulanSekarang)
+            ->whereYear('created_at', $tahunSekarang)
+            ->get();
+
+
+        foreach ($data as $item) {
+            $datePart = date("Ymd");
+            $randomPart = str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT);
+            $external_id = "INV-$datePart-$randomPart";
+            $userMeta = UserMeta::where('id', $item->user->user_meta_id)->first();
+            $package = Package::where('id', $userMeta->package_id)->first();
+
+            Invoice::create([
+                'external_id' => $external_id,
+                'price' => (int)$package->price,
+                'status' => "Belum Lunas",
+                'invoice_url' =>  "-",
+                'user_id' => $item->user->id,
+            ]);
+        }
+
+        return ResponseFormatter::success('Invoices created successfully.');
+    }
+
+
+
     function myInvoice(Request $request)
     {
         $user = $request->user();

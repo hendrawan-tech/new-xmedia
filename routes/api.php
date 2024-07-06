@@ -64,4 +64,5 @@ Route::get('/package', [DataController::class, 'package']);
 Route::get('/client-perward', [DataController::class, 'getPerWard']);
 
 Route::get('/bulk-invoice', [InvoiceController::class, 'bulkCreateInvoice']);
+Route::get('/bulk-invoice-month', [InvoiceController::class, 'bulkCreateInvoice2']);
 Route::post('/invoice/callback', [InvoiceController::class, 'handleCallback']);
