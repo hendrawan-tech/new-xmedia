@@ -14,7 +14,7 @@ class UserHasInvoiceController extends Controller
      */
     public function index($id)
     {
-        $invoices = Invoice::orderBy('created_at', 'DESC')->get();
+        $invoices = Invoice::orderBy('created_at', 'DESC')->whereNull('deleted_at')->get();
         $userHasInvoices = UserHasInvoice::pluck('invoice_id')->all();
         $data = Invoice::whereNotIn('id', $userHasInvoices)->where('status', 'Belum Lunas')->orderBy('created_at', 'DESC')->get();
 
