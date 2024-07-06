@@ -181,6 +181,10 @@
                                 <small class="form-text text-danger">{{ $message }}</small>
                             @enderror
                         </div>
+                        <div class="form-group form-check">
+                            <input type="checkbox" class="form-check-input" id="invoice" name="invoice">
+                            <label class="form-check-label" for="invoice">Buat Invoice?</label>
+                        </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                 </div>

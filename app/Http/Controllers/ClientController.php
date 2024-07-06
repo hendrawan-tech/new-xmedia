@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Installation;
+use App\Models\Invoice;
 use App\Models\Package;
 use App\Models\User;
 use App\Models\UserMeta;
@@ -107,6 +108,22 @@ class ClientController extends Controller
             'user_id' => $user->id,
             'first_payment' => $request->status == 'Aktif' ? '2' : '1',
         ]);
+
+        if ($request->invoice) {
+            $datePart = date("Ymd");
+            $randomPart = str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT);
+            $external_id = "INV-$datePart-$randomPart";
+            $userMeta = UserMeta::where('id', $userMeta->id)->first();
+            $package = Package::where('id', $userMeta->package_id)->first();
+
+            Invoice::create([
+                'external_id' => $external_id,
+                'price' => (int)$package->price,
+                'status' => "Belum Lunas",
+                'invoice_url' =>  "-",
+                'user_id' => $user->id,
+            ]);
+        }
 
         return redirect('/user/clients')->with('success', 'Pelanggan Ditambah');
     }
