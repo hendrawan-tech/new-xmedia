@@ -31,7 +31,7 @@ class InvoiceController extends Controller
                     $query->whereNull('deleted_at');
                 })
                 ->with(['user.userMeta.package', 'user.installations'])
-                ->paginate($request->perpage);
+                ->get();
         }
         return ResponseFormatter::success($data);
     }
