@@ -25,7 +25,8 @@ class InvoiceController extends Controller
             $data = Invoice::where(['user_id' => $user->id])->orderBy('created_at', 'DESC')->with('user.userMeta.package', 'user.installations')->paginate($request->perpage);
         } else {
             $userInvoices = UserHasInvoice::where('user_id', $user->id)->pluck('invoice_id');
-            $data = Invoice::whereIn('id', $userInvoices)
+            $data = [];
+            $data['data'] = Invoice::whereIn('id', $userInvoices)
                 ->orderBy('created_at', 'DESC')
                 ->whereHas('user', function ($query) {
                     $query->whereNull('deleted_at');
